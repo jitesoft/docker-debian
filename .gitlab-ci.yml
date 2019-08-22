@@ -17,7 +17,7 @@ download:
     - PATHS="oldstable oldstable/slim stable stable/slim"
     - |
       for PATH in ${PATHS}; do
-        FULL=${URI}/${PATH}
+        FULL="${URI}/${PATH}"
         mkdir -p artifacts/${PATH}
         curl -lsS ${FULL}/rootfs.debian_version > version.txt
         curl -lsS ${FULL}/Release | grep -oP "(?<=Codename: )(.*)" >> version.txt
