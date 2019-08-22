@@ -1,0 +1,101 @@
+stages:
+  - download
+  - build
+  - scan
+
+download:
+  variables:
+    URI: https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype/job/amd64/lastSuccessfulBuild/artifact/
+  stage: download
+  image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
+  before_script:
+    - apk add --no-cache gnupg curl grep
+  script:
+    - PATHS="oldstable oldstable/slim stable stable/slim"
+    - |
+      for PATH in ${PATHS}; do
+        FULL=${URI}/${PATH}
+        curl -lsS ${FULL}/rootfs.debian_version > version.txt
+        curl -lsS ${FULL}/Release | grep -oP "(?<=Codename: )(.*)" >> version.txt
+        mv version.txt artifacts/${PATH}/
+        curl -OlsS ${FULL}/rootfs.tar.xz
+        curl -OlsS ${FULL}/rootfs.tar.xz.sha256
+        echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
+        mv rootfs.tar.xz artifacts/${PATH}/
+     done
+  artifacts:
+    expire_in: 5 days
+    paths:
+      - artifacts/
+
+.build:
+  dependencies:
+    - download
+  stage: build
+  variables:
+    PATH: /
+    TAG_SUFFIX: ""
+  script:
+    - mv artifacts/${PATH}/rootfs.tar.xz rootfs.tar.xz
+    - VERSION=$(cat artifacts/${PATH}/version.txt | awk 'NR==1{print $1})
+    - NAME=$(cat artifacts/${PATH}/version.txt | awk 'NR==2{print $1})
+    - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${PATH} .
+    - docker push ${CI_REGISTRY_IMAGE}:${PATH}
+    - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX}"
+    - for tag in ${TAGS}; do
+        docker tag ${CI_REGISTRY_IMAGE}:${PATH} ${CI_REGISTRY_IMAGE}:${tag}
+#        docker tag ${CI_REGISTRY_IMAGE}:${PATH} jitesoft/debian:${tag}
+        docker push ${CI_REGISTRY_IMAGE}:${tag}
+#        docker push jitesoft/debian:${tag}
+
+build:old:
+  extends: .build
+  variables:
+    PATH: 'oldstable'
+    TAGS: ""
+    TAG_SUFFIX: ""
+
+build:stable:
+  extends: .build
+  variables:
+    PATH: 'stable'
+    TAGS: "latest stable"
+    TAG_SUFFIX: ""
+
+build:old:slim:
+  extends: .build
+  variables:
+    PATH: 'oldstable/slim'
+    TAGS: ""
+    TAG_SUFFIX: "-slim"
+
+build:stable:slim:
+  extends: .build
+  variables:
+    PATH: 'stable/slim'
+    TAGS: "latest stable"
+    TAG_SUFFIX: "-slim"
+
+scan:stable:
+  stage: scan
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable"
+
+scan:old:
+  stage: scan
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:oldstable"
+
+scan:stable:slim:
+  stage: scan
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable/slim"
+
+scan:old:slim:
+  stage: scan
+  extends: .container_scanning
+  variables:
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:oldstable/slim"
