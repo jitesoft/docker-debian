@@ -20,8 +20,8 @@ download:
     - VERSIONS="stable oldstable"
     - |
       for v in $VERSIONS; do
-        curl -lsS ${URI}/${v}/rootfs.debian_version > version.txt
-        curl -lsS ${URI}/${v}/Release | grep -oP "(?<=Codename:\ )(.*)" | awk '{print $1}' >> version.txt
+        curl -lsS ${URI}/${v}/rootfs.debian_version > artifacts/${v}/version.txt
+        curl -lsS ${URI}/${v}/Release | grep -oP "(?<=Codename:\ )(.*)" | awk '{print $1}' >> artifacts/${v}/version.txt
         cp artifacts/${v}/version.txt artifacts/${v}/slim/version.txt
       done;
     - |
