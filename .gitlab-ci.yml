@@ -50,19 +50,15 @@ download:
   script:
     - mv artifacts/${DIR_PATH}/rootfs.tar.xz rootfs.tar.xz
     - VERSIONS=$(cat artifacts/${DIR_PATH}/version.txt)
-    - echo ${VERSIONS}
     - VERSION=$(echo ${VERSIONS} | awk '{print $1;}')
-    - echo ${VERSION}
     - MAJOR_VERSION=$(echo ${VERSION} | cut -d'.' -f1)
-    - echo ${MAJOR_VERSION}
     - NAME=$(echo ${VERSIONS} | awk '{print $2;}')
-    - echo ${NAME}
-    - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${VERSON}${TAG_SUFFIX} .
+    - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} .
     - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX} ${MAJOR_VERSION}${TAG_SUFFIX}"
     - |
       for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}:${VERSON}${TAG_SUFFIX} ${CI_REGISTRY_IMAGE}:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:${VERSON}${TAG_SUFFIX} jitesoft/debian:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} ${CI_REGISTRY_IMAGE}:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} jitesoft/debian:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
         docker push jitesoft/debian:${tag}
       done;
