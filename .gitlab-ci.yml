@@ -17,18 +17,20 @@ download:
     - PATHS="oldstable oldstable/slim stable stable/slim"
     - mkdir -p artifacts/stable/slim
     - mkdir -p artifacts/oldstable/slim
+    - VERSIONS="stable oldstable"
+    - |
+      for v in $VERSIONS; do
+        curl -lsS ${URI}/${v}/rootfs.debian_version > version.txt
+        curl -lsS ${URI}/${v}/Release | grep -oP "(?<=Codename:\ )(.*)" | awk '{print $1}' >> version.txt
+        cp artifacts/${v}/version.txt artifacts/${v}/slim/version.txt
+      done;
     - |
       for p in $PATHS; do
-        curl -lsS ${URI}/${p}/rootfs.debian_version > version.txt
-        curl -lsS ${URI}/${p}/Release | grep -oP "(?<=Codename: )(.*)" | awk '{print $1}' >> version.txt
-        mv version.txt artifacts/${p}/
         curl -OlsS ${URI}/${p}/rootfs.tar.xz
         curl -OlsS ${URI}/${p}/rootfs.tar.xz.sha256
         echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
         mv rootfs.tar.xz artifacts/${p}/
       done;
-    - cp artifacts/stable/version.txt artifacts/stable/slim/version.txt
-    - cp artifacts/oldstable/version.txt artifacts/oldstable/slim/version.txt
   artifacts:
     expire_in: 5 days
     paths:
@@ -59,7 +61,7 @@ download:
         #docker tag ${CI_REGISTRY_IMAGE}:${DIR_PATH} jitesoft/debian:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
         #docker push jitesoft/debian:${tag}
-      done
+      done;
 
 build:old:
   extends: .build
