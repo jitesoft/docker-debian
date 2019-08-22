@@ -57,15 +57,14 @@ download:
     - echo ${MAJOR_VERSION}
     - NAME=$(echo ${VERSIONS} | awk '{print $2;}')
     - echo ${NAME}
-    - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${DIR_PATH} .
-    - docker push ${CI_REGISTRY_IMAGE}:${DIR_PATH}
+    - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${VERSON}${TAG_SUFFIX} .
     - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX} ${MAJOR_VERSION}${TAG_SUFFIX}"
     - |
       for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}:${DIR_PATH} ${CI_REGISTRY_IMAGE}:${tag}
-        #docker tag ${CI_REGISTRY_IMAGE}:${DIR_PATH} jitesoft/debian:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${VERSON}${TAG_SUFFIX} ${CI_REGISTRY_IMAGE}:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${VERSON}${TAG_SUFFIX} jitesoft/debian:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
-        #docker push jitesoft/debian:${tag}
+        docker push jitesoft/debian:${tag}
       done;
 
 build:old:
@@ -93,7 +92,7 @@ build:stable:slim:
   extends: .build
   variables:
     DIR_PATH: 'stable/slim'
-    TAGS: "latest stable"
+    TAGS: "latest-slim stable-slim"
     TAG_SUFFIX: "-slim"
 
 scan:stable:
@@ -106,16 +105,16 @@ scan:old:
   stage: scan
   extends: .container_scanning
   variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:oldstable"
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch"
 
 scan:stable:slim:
   stage: scan
   extends: .container_scanning
   variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable/slim"
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable-slim"
 
 scan:old:slim:
   stage: scan
   extends: .container_scanning
   variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:oldstable/slim"
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch-slim"
