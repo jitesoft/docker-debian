@@ -49,9 +49,14 @@ download:
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
     - mv artifacts/${DIR_PATH}/rootfs.tar.xz rootfs.tar.xz
-    - VERSION=$(cat artifacts/${DIR_PATH}/version.txt | awk 'NR==1{print $1})
+    - VERSIONS=$(cat artifacts/${DIR_PATH}/version.txt)
+    - echo ${VERSIONS}
+    - VERSION=$(echo ${VERSIONS} | awk 'NR==1{print $1})
+    - echo ${VERSION}
     - MAJOR_VERSION=$(echo ${VERSION} | cut -d'.' -f1)
-    - NAME=$(cat artifacts/${DIR_PATH}/version.txt | awk 'NR==2{print $1})
+    - echo ${MAJOR_VERSION}
+    - NAME=$(echo ${VERSIONS} | awk 'NR==2{print $1})
+    - echo ${NAME}
     - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${DIR_PATH} .
     - docker push ${CI_REGISTRY_IMAGE}:${DIR_PATH}
     - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX} ${MAJOR_VERSION}${TAG_SUFFIX}"
