@@ -32,7 +32,7 @@ download:
         mv rootfs.tar.xz artifacts/${p}/
       done;
   artifacts:
-    expire_in: 5 days
+    expire_in: 2 days
     paths:
       - artifacts/
 
