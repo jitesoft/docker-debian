@@ -51,11 +51,11 @@ download:
     - mv artifacts/${DIR_PATH}/rootfs.tar.xz rootfs.tar.xz
     - VERSIONS=$(cat artifacts/${DIR_PATH}/version.txt)
     - echo ${VERSIONS}
-    - VERSION=$(echo ${VERSIONS} | awk '{print $1;})
+    - VERSION=$(echo ${VERSIONS} | awk '{print $1;}')
     - echo ${VERSION}
     - MAJOR_VERSION=$(echo ${VERSION} | cut -d'.' -f1)
     - echo ${MAJOR_VERSION}
-    - NAME=$(echo ${VERSIONS} | awk '{print $2;})
+    - NAME=$(echo ${VERSIONS} | awk '{print $2;}')
     - echo ${NAME}
     - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${DIR_PATH} .
     - docker push ${CI_REGISTRY_IMAGE}:${DIR_PATH}
