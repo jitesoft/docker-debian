@@ -14,17 +14,18 @@ download:
   before_script:
     - apk add --no-cache gnupg curl grep
   script:
+    - URI=https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype/job/amd64/lastSuccessfulBuild/artifact/
     - PATHS="oldstable oldstable/slim stable stable/slim"
     - |
-      for PATH in ${PATHS}; do
-        mkdir -p artifacts/${PATH}
-        curl -lsS ${URI}/${PATH}/rootfs.debian_version > version.txt
-        curl -lsS ${URI}/${PATH}/Release | grep -oP "(?<=Codename: )(.*)" >> version.txt
-        mv version.txt artifacts/${PATH}/
-        curl -OlsS ${URI}/${PATH}/rootfs.tar.xz
-        curl -OlsS ${URI}/${PATH}/rootfs.tar.xz.sha256
+      for p in $PATHS; do
+        mkdir -p artifacts/${p}
+        curl -lsS ${URI}/${p}/rootfs.debian_version > version.txt
+        curl -lsS ${URI}/${p}/Release | grep -oP "(?<=Codename: )(.*)" >> version.txt
+        mv version.txt artifacts/${p}/
+        curl -OlsS ${URI}/${p}/rootfs.tar.xz
+        curl -OlsS ${URI}/${p}/rootfs.tar.xz.sha256
         echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
-        mv rootfs.tar.xz artifacts/${PATH}/
+        mv rootfs.tar.xz artifacts/${p}/
       done
   artifacts:
     expire_in: 5 days
@@ -37,23 +38,23 @@ download:
   image: registry.gitlab.com/jitesoft/dockerfiles/docker:latest
   stage: build
   variables:
-    PATH: /
+    DIR_PATH: /
     TAG_SUFFIX: ""
   before_script:
     - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
     - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
-    - mv artifacts/${PATH}/rootfs.tar.xz rootfs.tar.xz
-    - VERSION=$(cat artifacts/${PATH}/version.txt | awk 'NR==1{print $1})
+    - mv artifacts/${DIR_PATH}/rootfs.tar.xz rootfs.tar.xz
+    - VERSION=$(cat artifacts/${DIR_PATH}/version.txt | awk 'NR==1{print $1})
     - MAJOR_VERSION=$(echo ${VERSION} | cut -d'.' -f1)
-    - NAME=$(cat artifacts/${PATH}/version.txt | awk 'NR==2{print $1})
-    - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${PATH} .
-    - docker push ${CI_REGISTRY_IMAGE}:${PATH}
+    - NAME=$(cat artifacts/${DIR_PATH}/version.txt | awk 'NR==2{print $1})
+    - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${DIR_PATH} .
+    - docker push ${CI_REGISTRY_IMAGE}:${DIR_PATH}
     - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX} ${MAJOR_VERSION}${TAG_SUFFIX}"
     - |
       for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}:${PATH} ${CI_REGISTRY_IMAGE}:${tag}
-        #docker tag ${CI_REGISTRY_IMAGE}:${PATH} jitesoft/debian:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${DIR_PATH} ${CI_REGISTRY_IMAGE}:${tag}
+        #docker tag ${CI_REGISTRY_IMAGE}:${DIR_PATH} jitesoft/debian:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
         #docker push jitesoft/debian:${tag}
       done
@@ -61,28 +62,28 @@ download:
 build:old:
   extends: .build
   variables:
-    PATH: 'oldstable'
+    DIR_PATH: 'oldstable'
     TAGS: ""
     TAG_SUFFIX: ""
 
 build:stable:
   extends: .build
   variables:
-    PATH: 'stable'
+    DIR_PATH: 'stable'
     TAGS: "latest stable"
     TAG_SUFFIX: ""
 
 build:old:slim:
   extends: .build
   variables:
-    PATH: 'oldstable/slim'
+    DIR_PATH: 'oldstable/slim'
     TAGS: ""
     TAG_SUFFIX: "-slim"
 
 build:stable:slim:
   extends: .build
   variables:
-    PATH: 'stable/slim'
+    DIR_PATH: 'stable/slim'
     TAGS: "latest stable"
     TAG_SUFFIX: "-slim"
 
