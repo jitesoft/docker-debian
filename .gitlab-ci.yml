@@ -14,7 +14,6 @@ download:
   before_script:
     - apk add --no-cache gnupg curl grep
   script:
-    - URI=https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype/job/amd64/lastSuccessfulBuild/artifact/
     - PATHS="oldstable oldstable/slim stable stable/slim"
     - |
       for p in $PATHS; do
@@ -26,6 +25,7 @@ download:
         curl -OlsS ${URI}/${p}/rootfs.tar.xz.sha256
         echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
         mv rootfs.tar.xz artifacts/${p}/
+        rm rootfs.tar.xz.sha256
       done
   artifacts:
     expire_in: 5 days
