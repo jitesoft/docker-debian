@@ -12,7 +12,7 @@ download:
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
-    - apk add --no-cache gnupg curl grep
+    - apk add --no-cache coreutils curl grep
   script:
     - PATHS="oldstable oldstable/slim stable stable/slim"
     - |
