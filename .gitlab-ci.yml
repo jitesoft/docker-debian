@@ -15,18 +15,20 @@ download:
     - apk add --no-cache coreutils curl grep
   script:
     - PATHS="oldstable oldstable/slim stable stable/slim"
+    - mkdir -p artifacts/stable/slim
+    - mkdir -p artifacts/oldstable/slim
     - |
       for p in $PATHS; do
-        mkdir -p artifacts/${p}
         curl -lsS ${URI}/${p}/rootfs.debian_version > version.txt
-        curl -lsS ${URI}/${p}/Release | grep -oP "(?<=Codename: )(.*)" >> version.txt
+        curl -lsS ${URI}/${p}/Release | grep -oP "(?<=Codename: )(.*)" | awk '{print $1}' >> version.txt
         mv version.txt artifacts/${p}/
         curl -OlsS ${URI}/${p}/rootfs.tar.xz
         curl -OlsS ${URI}/${p}/rootfs.tar.xz.sha256
         echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
         mv rootfs.tar.xz artifacts/${p}/
-        rm rootfs.tar.xz.sha256
-      done
+      done;
+    - cp artifacts/stable/version.txt artifacts/stable/slim/version.txt
+    - cp artifacts/oldstable/version.txt artifacts/oldstable/slim/version.txt
   artifacts:
     expire_in: 5 days
     paths:
