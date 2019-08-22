@@ -1,3 +1,6 @@
+include:
+  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/container_scan.yml
+
 stages:
   - download
   - build
@@ -22,7 +25,7 @@ download:
         curl -OlsS ${FULL}/rootfs.tar.xz.sha256
         echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
         mv rootfs.tar.xz artifacts/${PATH}/
-     done
+      done
   artifacts:
     expire_in: 5 days
     paths:
@@ -31,10 +34,14 @@ download:
 .build:
   dependencies:
     - download
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker:latest
   stage: build
   variables:
     PATH: /
     TAG_SUFFIX: ""
+  before_script:
+    - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
+    - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
     - mv artifacts/${PATH}/rootfs.tar.xz rootfs.tar.xz
     - VERSION=$(cat artifacts/${PATH}/version.txt | awk 'NR==1{print $1})
@@ -42,11 +49,13 @@ download:
     - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${PATH} .
     - docker push ${CI_REGISTRY_IMAGE}:${PATH}
     - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX}"
-    - for tag in ${TAGS}; do
+    - |
+      for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${PATH} ${CI_REGISTRY_IMAGE}:${tag}
-#        docker tag ${CI_REGISTRY_IMAGE}:${PATH} jitesoft/debian:${tag}
+        #docker tag ${CI_REGISTRY_IMAGE}:${PATH} jitesoft/debian:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
-#        docker push jitesoft/debian:${tag}
+        #docker push jitesoft/debian:${tag}
+      done
 
 build:old:
   extends: .build
