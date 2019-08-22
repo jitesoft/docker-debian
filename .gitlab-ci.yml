@@ -18,6 +18,7 @@ download:
     - |
       for PATH in ${PATHS}; do
         FULL=${URI}/${PATH}
+        mkdir -p artifacts/${PATH}
         curl -lsS ${FULL}/rootfs.debian_version > version.txt
         curl -lsS ${FULL}/Release | grep -oP "(?<=Codename: )(.*)" >> version.txt
         mv version.txt artifacts/${PATH}/
@@ -45,10 +46,11 @@ download:
   script:
     - mv artifacts/${PATH}/rootfs.tar.xz rootfs.tar.xz
     - VERSION=$(cat artifacts/${PATH}/version.txt | awk 'NR==1{print $1})
+    - MAJOR_VERSION=$(echo ${VERSION} | cut -d'.' -f1)
     - NAME=$(cat artifacts/${PATH}/version.txt | awk 'NR==2{print $1})
     - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${PATH} .
     - docker push ${CI_REGISTRY_IMAGE}:${PATH}
-    - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX}"
+    - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX} ${MAJOR_VERSION}${TAG_SUFFIX}"
     - |
       for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${PATH} ${CI_REGISTRY_IMAGE}:${tag}
