@@ -30,6 +30,15 @@ to slim down the images to fit for container usage.
   * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
   * `9-slim`, `stretch-slim`
 
+### Quay.io
+
+* `quay.io/jitesoft/debian`
+  * `latest`, `stable`, `10`, `buster`
+  * `9`, `stretch`
+  * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
+  * `9-slim`, `stretch-slim`
+
+Dockerfiles can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/debian/) and [GitHub](https://github.com/jitesoft/docker-debian).
 
 ## Image Labels
 
@@ -39,6 +48,3 @@ This image follows the [Jitesoft image label specification 1.0.0](https://gitlab
 
 Files in this repository are released under the MIT license.  
 Read the full Debian license [here](https://www.debian.org/legal/licenses/).  
-
-
-

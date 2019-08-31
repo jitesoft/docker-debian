@@ -44,9 +44,6 @@ download:
   variables:
     DIR_PATH: /
     TAG_SUFFIX: ""
-  before_script:
-    - echo ${CI_JOB_TOKEN} | docker login -u gitlab-ci-token registry.gitlab.com --password-stdin
-    - echo ${DOCKER_HUB_PASSWORD} | docker login -u ${DOCKER_HUB_USER} --password-stdin
   script:
     - mv artifacts/${DIR_PATH}/rootfs.tar.xz rootfs.tar.xz
     - VERSIONS=$(cat artifacts/${DIR_PATH}/version.txt)
