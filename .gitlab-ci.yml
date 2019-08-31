@@ -56,8 +56,10 @@ download:
       for tag in ${TAGS}; do
         docker tag ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} ${CI_REGISTRY_IMAGE}:${tag}
         docker tag ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} jitesoft/debian:${tag}
+        docker tag ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} quay.io/jitesoft/debian:${tag}
         docker push ${CI_REGISTRY_IMAGE}:${tag}
         docker push jitesoft/debian:${tag}
+        docker push quay.io/jitesoft/debian:${tag}
       done;
 
 build:old:
