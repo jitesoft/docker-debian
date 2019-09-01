@@ -9,6 +9,7 @@ stages:
 download:
   variables:
     URI: https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype/job/amd64/lastSuccessfulBuild/artifact/
+    GIT_STRATEGY: none
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
@@ -91,25 +92,37 @@ build:stable:slim:
     TAG_SUFFIX: "-slim"
 
 scan:stable:
+  needs:
+    - build:stable
   stage: scan
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable"
+    GIT_STRATEGY: none
 
 scan:old:
+  needs:
+    - build:old
   stage: scan
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch"
+    GIT_STRATEGY: none
 
 scan:stable:slim:
+  needs:
+    - build:stable:slim
   stage: scan
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable-slim"
+    GIT_STRATEGY: none
 
 scan:old:slim:
+  needs:
+    - build:old:slim
   stage: scan
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch-slim"
+    GIT_STRATEGY: none
