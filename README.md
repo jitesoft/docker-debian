@@ -17,26 +17,27 @@ to slim down the images to fit for container usage.
 
 ### Docker Hub
 
-* `latest`, `stable`, `10`, `buster`
-* `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
-* `9`, `stretch`
-* `9-slim`, `stretch-slim`
+* `jitesoft/debian`
+    * `latest`, `stable`, `10`, `buster`
+    * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
+    * `9`, `stretch`
+    * `9-slim`, `stretch-slim`
 
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/debian`
-  * `latest`, `stable`, `10`, `buster`
-  * `9`, `stretch`
-  * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
-  * `9-slim`, `stretch-slim`
+    * `latest`, `stable`, `10`, `buster`
+    * `9`, `stretch`
+    * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
+    * `9-slim`, `stretch-slim`
 
 ### Quay.io
 
 * `quay.io/jitesoft/debian`
-  * `latest`, `stable`, `10`, `buster`
-  * `9`, `stretch`
-  * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
-  * `9-slim`, `stretch-slim`
+    * `latest`, `stable`, `10`, `buster`
+    * `9`, `stretch`
+    * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
+    * `9-slim`, `stretch-slim`
 
 Dockerfiles can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/debian/) and [GitHub](https://github.com/jitesoft/docker-debian).
 
