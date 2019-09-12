@@ -94,7 +94,6 @@ build:stable:slim:
 scan:stable:
   needs:
     - build:stable
-  stage: scan
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable"
@@ -103,7 +102,6 @@ scan:stable:
 scan:old:
   needs:
     - build:old
-  stage: scan
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch"
@@ -112,7 +110,6 @@ scan:old:
 scan:stable:slim:
   needs:
     - build:stable:slim
-  stage: scan
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable-slim"
@@ -121,7 +118,6 @@ scan:stable:slim:
 scan:old:slim:
   needs:
     - build:old:slim
-  stage: scan
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch-slim"
