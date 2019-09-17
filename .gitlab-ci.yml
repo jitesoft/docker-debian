@@ -72,7 +72,7 @@ download:
     - docker buildx build --platform ${ARCH_LIST} ${TAG_STRING} \
        --build-arg "VERSION=${VERSION}"
        --build-arg "NAME=${NAME}" \
-       --build-arg "ARTIFACT_PATH="${DIR_PATH}" \
+       --build-arg "ARTIFACT_PATH=${DIR_PATH}" \
        --progress plain \
        --push
   tags:
