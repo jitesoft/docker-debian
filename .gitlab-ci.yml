@@ -22,7 +22,8 @@ download:
     - chmod +x helper
   script:
     - PATHS="oldstable oldstable/slim stable stable/slim"
-    - mkdir -p artifacts/{stable,oldstable}/slim
+    - mkdir -p artifacts/stable/slim
+    - mkdir -p artifacts/oldstable/slim
     - VERSIONS="stable oldstable"
     - |
       for v in $VERSIONS; do
