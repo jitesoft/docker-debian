@@ -75,6 +75,15 @@ download:
        --build-arg "ARTIFACT_PATH="${DIR_PATH}" \
        --progress plain \
        --push
+  tags:
+    - jitesoft
+    - buildx
+    - amd64
+    - arm7
+    - arm64
+    - x86
+    - ppc64le
+    - s390x
 
 build:old:
   extends: .build
