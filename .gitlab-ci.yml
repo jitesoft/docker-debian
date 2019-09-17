@@ -22,8 +22,7 @@ download:
     - chmod +x helper
   script:
     - PATHS="oldstable oldstable/slim stable stable/slim"
-    - mkdir -p artifacts/stable/slim
-    - mkdir -p artifacts/oldstable/slim
+    - mkdir -p artifacts/{stable,oldstable}/slim
     - VERSIONS="stable oldstable"
     - |
       for v in $VERSIONS; do
@@ -66,9 +65,8 @@ download:
     - VERSION=$(echo ${VERSIONS} | awk '{print $1;}')
     - NAME=$(echo ${VERSIONS} | awk '{print $2;}')
     - TAGS="${TAGS},${VERSION}${TAG_SUFFIX},$(echo ${VERSION} | cut -d'.' -f1)${TAG_SUFFIX},${NAME}${TAG_SUFFIX}"
-    - REGISTRIES="${CI_REGISTRY_IMAGE},jitesoft/debian"
     - ARCH_LIST=$(./helper archlist ${ARCHITECTURES})
-    - TAG_STRING=$(./helper taglist "${REGISTRIES}" "${TAGS}")
+    - TAG_STRING=$(./helper taglist "${CI_REGISTRY_IMAGE},jitesoft/debian" "${TAGS}")
     - echo "Building for following architectures ${ARCH_LIST}"
     - docker buildx build --platform ${ARCH_LIST} ${TAG_STRING} \
        --build-arg "VERSION=${VERSION}"
@@ -80,7 +78,6 @@ download:
 build:old:
   extends: .build
   variables:
-    BUILD_TYOE: ""
     DIR_PATH: 'oldstable'
     TAGS: ""
     TAG_SUFFIX: ""
@@ -88,7 +85,6 @@ build:old:
 build:stable:
   extends: .build
   variables:
-    BUILD_TYOE: ""
     DIR_PATH: 'stable'
     TAGS: "latest,stable"
     TAG_SUFFIX: ""
@@ -96,7 +92,6 @@ build:stable:
 build:old:slim:
   extends: .build
   variables:
-    BUILD_TYOE: "slim"
     DIR_PATH: 'oldstable/slim'
     TAGS: ""
     TAG_SUFFIX: "-slim"
@@ -104,7 +99,6 @@ build:old:slim:
 build:stable:slim:
   extends: .build
   variables:
-    BUILD_TYOE: "slim"
     DIR_PATH: 'stable/slim'
     TAGS: "latest-slim,stable-slim"
     TAG_SUFFIX: "-slim"
