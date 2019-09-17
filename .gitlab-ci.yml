@@ -44,7 +44,7 @@ download:
         done
       done;
   artifacts:
-    expire_in: 2 days
+    expire_in: 1 hour
     paths:
       - artifacts/
 
