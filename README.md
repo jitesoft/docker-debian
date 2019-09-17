@@ -15,6 +15,8 @@ which removes a [set of files](https://github.com/debuerreotype/debuerreotype/bl
 All rootfs files are retrieved from https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype which uses the debuerreotype script
 to slim down the images to fit for container usage.
 
+Each image is built for the following architectures: `amd64/x86_64`, `arm64`, `armv7`, `ppc64le`, `s390x`, `x86`
+
 ### Docker Hub
 
 * `jitesoft/debian`

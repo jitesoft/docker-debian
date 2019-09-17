@@ -51,7 +51,7 @@ download:
 .build:
   dependencies:
     - download
-  image: registry.gitlab.com/jitesoft/dockerfiles/docker:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
   stage: build
   variables:
     DIR_PATH: /
