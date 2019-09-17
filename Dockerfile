@@ -13,6 +13,8 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.app.debian.version="${VERSION}" \
       com.jitesoft.app.debian.version.name="${NAME}"
 
+ARG ARTIFACT_PATH
+
 ENV LANG="C.UTF-8"
 ADD artifacts/${ARTIFACT_PATH}/${TARGETPLATFORM}/rootfs.tar.xz /
 CMD ["bash"]
