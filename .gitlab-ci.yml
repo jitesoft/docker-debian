@@ -6,14 +6,20 @@ stages:
   - build
   - scan
 
+variables:
+  ARCHITECTURES: "amd64 arm32v7 arm64v8 i386 ppc64le s390x"
+
 download:
   variables:
-    URI: https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype/job/amd64/lastSuccessfulBuild/artifact/
+    URI: https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype/job
     GIT_STRATEGY: none
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
     - apk add --no-cache coreutils curl grep
+    - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh
+    - mv helper.sh helper
+    - chmod +x helper
   script:
     - PATHS="oldstable oldstable/slim stable stable/slim"
     - mkdir -p artifacts/stable/slim
@@ -21,16 +27,21 @@ download:
     - VERSIONS="stable oldstable"
     - |
       for v in $VERSIONS; do
-        curl -lsS ${URI}/${v}/rootfs.debian_version > artifacts/${v}/version.txt
-        curl -lsS ${URI}/${v}/Release | grep -oP "(?<=Codename:\ )(.*)" | awk '{print $1}' >> artifacts/${v}/version.txt
+        curl -lsS ${URI}/amd64/lastSuccessfulBuild/artifact/${v}/rootfs.debian_version > artifacts/${v}/version.txt
+        curl -lsS ${URI}/amd64/lastSuccessfulBuild/artifact/${v}/Release | grep -oP "(?<=Codename:\ )(.*)" | awk '{print $1}' >> artifacts/${v}/version.txt
         cp artifacts/${v}/version.txt artifacts/${v}/slim/version.txt
       done;
     - |
       for p in $PATHS; do
-        curl -OlsS ${URI}/${p}/rootfs.tar.xz
-        curl -OlsS ${URI}/${p}/rootfs.tar.xz.sha256
-        echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
-        mv rootfs.tar.xz artifacts/${p}/
+        for ARCH in $ARCHITECTURES; do
+          DOCKER_ARCH=$(./helper arch "${ARCH}")
+          mkdir -p artifacts/${p}/${DOCKER_ARCH}
+          curl -OlsS ${URI}/${ARCH}/lastSuccessfulBuild/artifact/${p}/rootfs.tar.xz
+          curl -OlsS ${URI}/${ARCH}/lastSuccessfulBuild/artifact/${p}/rootfs.tar.xz.sha256
+          echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
+          rm rootfs.tar.xz.sha256
+          mv rootfs.tar.xz artifacts/${p}/${DOCKER_ARCH}/rootfs.tar.xz
+        done
       done;
   artifacts:
     expire_in: 2 days
@@ -45,27 +56,31 @@ download:
   variables:
     DIR_PATH: /
     TAG_SUFFIX: ""
+  before_script:
+    - apk add --no-cache wget
+    - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh
+    - mv helper.sh helper
+    - chmod +x helper
   script:
-    - mv artifacts/${DIR_PATH}/rootfs.tar.xz rootfs.tar.xz
     - VERSIONS=$(cat artifacts/${DIR_PATH}/version.txt)
     - VERSION=$(echo ${VERSIONS} | awk '{print $1;}')
-    - MAJOR_VERSION=$(echo ${VERSION} | cut -d'.' -f1)
     - NAME=$(echo ${VERSIONS} | awk '{print $2;}')
-    - docker build --label "com.jitesoft.app.debian.version=${VERSION}" --label "com.jitesoft.app.debian.version.name=${NAME}" -t ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} .
-    - TAGS="${TAGS} ${NAME}${TAG_SUFFIX} ${VERSION}${TAG_SUFFIX} ${MAJOR_VERSION}${TAG_SUFFIX}"
-    - |
-      for tag in ${TAGS}; do
-        docker tag ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} ${CI_REGISTRY_IMAGE}:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} jitesoft/debian:${tag}
-        docker tag ${CI_REGISTRY_IMAGE}:${VERSION}${TAG_SUFFIX} quay.io/jitesoft/debian:${tag}
-        docker push ${CI_REGISTRY_IMAGE}:${tag}
-        docker push jitesoft/debian:${tag}
-        docker push quay.io/jitesoft/debian:${tag}
-      done;
+    - TAGS="${TAGS},${VERSION}${TAG_SUFFIX},$(echo ${VERSION} | cut -d'.' -f1)${TAG_SUFFIX},${NAME}${TAG_SUFFIX}"
+    - REGISTRIES="${CI_REGISTRY_IMAGE},jitesoft/debian"
+    - ARCH_LIST=$(./helper archlist ${ARCHITECTURES})
+    - TAG_STRING=$(./helper taglist "${REGISTRIES}" "${TAGS}")
+    - echo "Building for following architectures ${ARCH_LIST}"
+    - docker buildx build --platform ${ARCH_LIST} ${TAG_STRING} \
+       --build-arg "VERSION=${VERSION}"
+       --build-arg "NAME=${NAME}" \
+       --build-arg "ARTIFACT_PATH="${DIR_PATH}" \
+       --progress plain \
+       --push
 
 build:old:
   extends: .build
   variables:
+    BUILD_TYOE: ""
     DIR_PATH: 'oldstable'
     TAGS: ""
     TAG_SUFFIX: ""
@@ -73,13 +88,15 @@ build:old:
 build:stable:
   extends: .build
   variables:
+    BUILD_TYOE: ""
     DIR_PATH: 'stable'
-    TAGS: "latest stable"
+    TAGS: "latest,stable"
     TAG_SUFFIX: ""
 
 build:old:slim:
   extends: .build
   variables:
+    BUILD_TYOE: "slim"
     DIR_PATH: 'oldstable/slim'
     TAGS: ""
     TAG_SUFFIX: "-slim"
@@ -87,8 +104,9 @@ build:old:slim:
 build:stable:slim:
   extends: .build
   variables:
+    BUILD_TYOE: "slim"
     DIR_PATH: 'stable/slim'
-    TAGS: "latest-slim stable-slim"
+    TAGS: "latest-slim,stable-slim"
     TAG_SUFFIX: "-slim"
 
 scan:stable:
