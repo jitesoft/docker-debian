@@ -17,8 +17,7 @@ download:
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
     - apk add --no-cache coreutils curl grep
-    - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh
-    - mv helper.sh helper
+    - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh -O helper
     - chmod +x helper
   script:
     - PATHS="oldstable oldstable/slim stable stable/slim"
@@ -51,24 +50,18 @@ download:
 .build:
   dependencies:
     - download
-  image: registry.gitlab.com/jitesoft/dockerfiles/docker/buildx:latest
+  image: registry.gitlab.com/jitesoft/dockerfiles/docker/misc:latest
   stage: build
   variables:
     DIR_PATH: /
     TAG_SUFFIX: ""
-  before_script:
-    - apk add --no-cache wget
-    - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh
-    - mv helper.sh helper
-    - chmod +x helper
   script:
     - VERSIONS=$(cat artifacts/${DIR_PATH}/version.txt)
     - VERSION=$(echo ${VERSIONS} | awk '{print $1;}')
     - NAME=$(echo ${VERSIONS} | awk '{print $2;}')
     - TAGS="${TAGS},${VERSION}${TAG_SUFFIX},$(echo ${VERSION} | cut -d'.' -f1)${TAG_SUFFIX},${NAME}${TAG_SUFFIX}"
-    - ARCH_LIST=$(./helper archlist ${ARCHITECTURES})
-    - TAG_STRING=$(./helper taglist "${CI_REGISTRY_IMAGE},jitesoft/debian" "${TAGS}")
-    - echo "Building for following architectures ${ARCH_LIST}"
+    - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
+    - TAG_STRING=$(helper taglist "${CI_REGISTRY_IMAGE},jitesoft/debian" "${TAGS}")
     - docker buildx build --platform ${ARCH_LIST} --push ${TAG_STRING} --progress plain --build-arg VERSION=${VERSION} --build-arg NAME=${NAME} --build-arg ARTIFACT_PATH=${DIR_PATH} .
   tags:
     - jitesoft
