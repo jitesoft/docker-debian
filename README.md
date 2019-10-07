@@ -1,7 +1,8 @@
 # Debian
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/jitesoft/debian.svg)](https://cloud.docker.com/u/jitesoft/repository/docker/jitesoft/debian)
+[![Docker Pulls](https://img.shields.io/docker/pulls/jitesoft/debian.svg)](https://hub.docker.com/r/jitesoft/debian)
 [![Back project](https://img.shields.io/badge/Open%20Collective-Tip%20the%20devs!-blue.svg)](https://opencollective.com/jitesoft-open-source)
+[![pipeline status](https://gitlab.com/jitesoft/dockerfiles/debian/badges/master/pipeline.svg)](https://gitlab.com/jitesoft/dockerfiles/debian/commits/master)
 
 This image contains the linux distro [Debian](https://www.debian.org).  
 It is intended to be used as a base image for debian based docker images.
