@@ -19,4 +19,3 @@ ARG ARTIFACT_PATH
 ENV LANG="C.UTF-8"
 ADD artifacts/${ARTIFACT_PATH}/${TARGETPLATFORM}/rootfs.tar.xz /
 CMD ["bash"]
-

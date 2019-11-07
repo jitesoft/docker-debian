@@ -63,7 +63,7 @@ download:
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
     - TAG_STRING=$(helper taglist "${CI_REGISTRY_IMAGE},jitesoft/debian" "${TAGS}")
     - docker buildx build --platform ${ARCH_LIST} --push ${TAG_STRING} --progress plain --build-arg VERSION=${VERSION} --build-arg NAME=${NAME} --build-arg ARTIFACT_PATH=${DIR_PATH} .
-  tags: [ jitesoft, buildx, amd64, arm7, arm64, x86, ppc64le, s390x ]
+  tags: [ jitesoft, buildx, protected ]
 
 build:old:
   extends: .build
