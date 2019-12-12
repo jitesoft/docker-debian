@@ -61,7 +61,7 @@ download:
     - NAME=$(echo ${VERSIONS} | awk '{print $2;}')
     - TAGS="${TAGS},${VERSION}${TAG_SUFFIX},$(echo ${VERSION} | cut -d'.' -f1)${TAG_SUFFIX},${NAME}${TAG_SUFFIX}"
     - ARCH_LIST=$(helper archlist ${ARCHITECTURES})
-    - TAG_STRING=$(helper taglist "${CI_REGISTRY_IMAGE},jitesoft/debian,quay.io/jitesoft/debian" "${TAGS}")
+    - TAG_STRING=$(helper taglist "${CI_REGISTRY_IMAGE},jitesoft/debian" "${TAGS}")
     - docker buildx build --platform ${ARCH_LIST} --push ${TAG_STRING} --progress plain --build-arg VERSION=${VERSION} --build-arg NAME=${NAME} --build-arg ARTIFACT_PATH=${DIR_PATH} .
   tags: [ jitesoft, buildx, protected ]
 
