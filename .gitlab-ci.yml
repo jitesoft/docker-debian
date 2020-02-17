@@ -16,7 +16,7 @@ download:
   stage: download
   image: registry.gitlab.com/jitesoft/dockerfiles/alpine:latest
   before_script:
-    - apk add --no-cache coreutils curl grep
+    - apk add --no-cache coreutils curl grep xz tar
     - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh -O helper
     - chmod +x helper
   script:
@@ -39,7 +39,10 @@ download:
           curl -OlsS ${URI}/${ARCH}/lastSuccessfulBuild/artifact/${p}/rootfs.tar.xz.sha256
           echo "$(cat rootfs.tar.xz.sha256) rootfs.tar.xz" | sha256sum -c -
           rm rootfs.tar.xz.sha256
-          mv rootfs.tar.xz artifacts/${p}/${DOCKER_ARCH}/rootfs.tar.xz
+          mkdir tmp
+          tar -xJhf rootfs.tar.xz -C tmp/
+          $(cd tmp && tar -czf ${CI_PROJECT_DIR}/rootfs.tar.gz *)
+          mv rootfs.tar.gz artifacts/${p}/${DOCKER_ARCH}/rootfs.tar.gz
         done
       done;
   artifacts:

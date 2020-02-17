@@ -17,5 +17,5 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
 ARG ARTIFACT_PATH
 
 ENV LANG="C.UTF-8"
-ADD artifacts/${ARTIFACT_PATH}/${TARGETPLATFORM}/rootfs.tar.xz /
+ADD artifacts/${ARTIFACT_PATH}/${TARGETPLATFORM}/rootfs.tar.gz /
 CMD ["bash"]
