@@ -42,6 +42,7 @@ download:
           mkdir tmp
           tar -xJhf rootfs.tar.xz -C tmp/
           $(cd tmp && tar -czf ${CI_PROJECT_DIR}/rootfs.tar.gz *)
+          rm -rf tmp
           mv rootfs.tar.gz artifacts/${p}/${DOCKER_ARCH}/rootfs.tar.gz
         done
       done;
