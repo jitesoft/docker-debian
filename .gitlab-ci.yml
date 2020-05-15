@@ -112,32 +112,24 @@ build:stable:slim:
     TAG_SUFFIX: "-slim"
 
 scan:stable:
-  needs:
-    - build:stable
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable"
     GIT_STRATEGY: none
 
 scan:old:
-  needs:
-    - build:old
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch"
     GIT_STRATEGY: none
 
 scan:stable:slim:
-  needs:
-    - build:stable:slim
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable-slim"
     GIT_STRATEGY: none
 
 scan:old:slim:
-  needs:
-    - build:old:slim
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch-slim"
