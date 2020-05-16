@@ -10,13 +10,10 @@ variables:
   ARCHITECTURES: "amd64 arm32v7 arm64v8 i386 ppc64le s390x"
 
 download:
-  only:
-    changes:
-      - Dockerfile
-      - .gitlab-ci.yml
-  except:
-    variables:
-      - $ONLY == "CONTAINER_SCAN"
+  rules:
+    - if: '$ONLY == "CONTAINER_SCAN"'
+      when: never
+    - when: on_success
   variables:
     URI: https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype/job
     GIT_STRATEGY: none
@@ -59,13 +56,10 @@ download:
       - artifacts/
 
 .build:
-  only:
-    changes:
-      - Dockerfile
-      - .gitlab-ci.yml
-  except:
-    variables:
-      - $ONLY == "CONTAINER_SCAN"
+  rules:
+    - if: '$ONLY == "CONTAINER_SCAN"'
+      when: never
+    - when: on_success
   dependencies:
     - download
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
