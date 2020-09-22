@@ -8,7 +8,7 @@ stages:
 
 variables:
   ARCHITECTURES: "amd64 arm32v7 arm64v8 i386 ppc64le s390x"
-  REGISTRY_IMAGES: "${CI_REGISTRY_IMAGE},jitesoft/debian,ghcr.io/jitesoft/debian,quay.io/jitesoft/debian"
+  REGISTRY_IMAGES: "${CI_REGISTRY_IMAGE},jitesoft/debian,ghcr.io/jitesoft/debian"
 
 download:
   rules:
@@ -25,10 +25,11 @@ download:
     - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh -O helper
     - chmod +x helper
   script:
-    - PATHS="testing testing/slim stable stable/slim"
+    # testing testing/slim
+    - PATHS="stable stable/slim"
     - mkdir -p artifacts/stable/slim
     - mkdir -p artifacts/testing/slim
-    - VERSIONS="stable testing"
+    - VERSIONS="stable"
     - |
       for v in $VERSIONS; do
         curl -lsS ${URI}/amd64/lastSuccessfulBuild/artifact/${v}/rootfs.debian_version > artifacts/${v}/version.txt
@@ -78,7 +79,7 @@ download:
     - docker buildx build --platform ${ARCH_LIST} --push ${TAG_STRING} --progress plain --build-arg VERSION=${VERSION} --build-arg NAME=${NAME} --build-arg ARTIFACT_PATH=${DIR_PATH} .
   tags: [ jitesoft, buildx, protected ]
 
-build:old:
+.build:old:
   extends: .build
   variables:
     DIR_PATH: 'testing'
@@ -92,7 +93,7 @@ build:stable:
     TAGS: "latest,stable"
     TAG_SUFFIX: ""
 
-build:old:slim:
+.build:old:slim:
   extends: .build
   variables:
     DIR_PATH: 'testing/slim'
@@ -112,7 +113,7 @@ scan:stable:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable"
     GIT_STRATEGY: none
 
-scan:old:
+.scan:old:
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:bullseye"
@@ -124,7 +125,7 @@ scan:stable:slim:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stable-slim"
     GIT_STRATEGY: none
 
-scan:old:slim:
+.scan:old:slim:
   extends: .container_scanning
   variables:
     SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:bullseye-slim"
