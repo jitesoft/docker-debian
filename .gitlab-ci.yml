@@ -25,10 +25,10 @@ download:
     - wget https://gist.githubusercontent.com/Johannestegner/093e8053eabd795ed84b83e9610aed6b/raw/helper.sh -O helper
     - chmod +x helper
   script:
-    - PATHS="oldstable oldstable/slim stable stable/slim"
+    - PATHS="testing testing/slim stable stable/slim"
     - mkdir -p artifacts/stable/slim
-    - mkdir -p artifacts/oldstable/slim
-    - VERSIONS="stable oldstable"
+    - mkdir -p artifacts/testing/slim
+    - VERSIONS="stable testing"
     - |
       for v in $VERSIONS; do
         curl -lsS ${URI}/amd64/lastSuccessfulBuild/artifact/${v}/rootfs.debian_version > artifacts/${v}/version.txt
@@ -81,7 +81,7 @@ download:
 build:old:
   extends: .build
   variables:
-    DIR_PATH: 'oldstable'
+    DIR_PATH: 'testing'
     TAGS: ""
     TAG_SUFFIX: ""
 
@@ -95,7 +95,7 @@ build:stable:
 build:old:slim:
   extends: .build
   variables:
-    DIR_PATH: 'oldstable/slim'
+    DIR_PATH: 'testing/slim'
     TAGS: ""
     TAG_SUFFIX: "-slim"
 
@@ -115,7 +115,7 @@ scan:stable:
 scan:old:
   extends: .container_scanning
   variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch"
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:bullseye"
     GIT_STRATEGY: none
 
 scan:stable:slim:
@@ -127,5 +127,5 @@ scan:stable:slim:
 scan:old:slim:
   extends: .container_scanning
   variables:
-    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:stretch-slim"
+    SCANNING_IMAGE_NAME: "${CI_REGISTRY_IMAGE}:bullseye-slim"
     GIT_STRATEGY: none
