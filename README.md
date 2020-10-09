@@ -26,6 +26,12 @@ Each image is built for the following architectures: `amd64/x86_64`, `arm64`, `a
     * `9`, `stretch`
     * `9-slim`, `stretch-slim`
 
+### GitHub
+
+* `ghcr.io/jitesoft/debian`
+    * `latest`, `stable`, `10`, `buster`
+    * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
+
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/debian`
