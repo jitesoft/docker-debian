@@ -37,7 +37,7 @@ check-version:
     - apk add --no-cache wget grep curl
     - VERSION=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/rootfs.debian_version)
     - CODENAME=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/Release | grep -oP "(?<=Codename:\ )(.*)" | awk '{print $1}')
-    - if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version.txt)" != "${VERSION} ]; then
+    - if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version.txt)" != "${VERSION}" ]; then
         echo "Should build new container for ${SUITE} version ${VERSION}"
         curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[CODENAME]=${CODENAME}" "variables[SUITE]=${SUITE}" "variables[VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       fi
