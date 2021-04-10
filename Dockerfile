@@ -1,8 +1,8 @@
 FROM scratch
 ARG VERSION
-ARG TARGETPLATFORM
-ARG TARGETARCH
-ARG NAME
+ARG TYPE
+ARG SUITE
+ARG CODENAME
 LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       maintainer.org="Jitesoft" \
       maintainer.org.uri="https://jitesoft.com" \
@@ -10,12 +10,14 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.project.repo.uri="https://gitlab.com/jitesoft/dockerfiles/debian" \
       com.jitesoft.project.repo.issues="https://gitlab.com/jitesoft/dockerfiles/debian/issues" \
       com.jitesoft.project.registry.uri="registry.gitlab.com/jitesoft/dockerfiles/debian" \
-      com.jitesoft.build.arch="${TARGETARCH}" \
       com.jitesoft.app.debian.version="${VERSION}" \
-      com.jitesoft.app.debian.version.name="${NAME}"
+      com.jitesoft.app.debian.version.name="${CODENAME}" \
+      com.jitesoft.app.debian.type="${TYPE}" \
+      com.jitesoft.app.debian.suite="${SUITE}"
 
-ARG ARTIFACT_PATH
+ARG TARGETARCH
+ARG TYPE
 
 ENV LANG="C.UTF-8"
-ADD artifacts/${ARTIFACT_PATH}/${TARGETPLATFORM}/rootfs.tar.gz /
+ADD ./artifacts/rootfs-${TARGETARCH}-${TYPE}.tar.gz /
 CMD ["bash"]
