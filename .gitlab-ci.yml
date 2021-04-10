@@ -25,6 +25,9 @@ check-version:
     - if: '$CI_PIPELINE_SOURCE == "trigger"'
       when: never
   stage: check
+  variables:
+    URI: https://doi-janky.infosiftr.net/job/tianon/job/debuerreotype/job
+    GIT_STRATEGY: none
   cache:
     key: debian-version-${SUITE}
     paths:
@@ -136,6 +139,7 @@ build:slim:
     key: debian-version-${SUITE}
 
 scan:full:
+  stage: scan
   rules:
     - if: "$BUILD && $SUITE && $VERSION"
       when: always
@@ -145,6 +149,7 @@ scan:full:
     - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}:${VERSION}"
 
 scan:slim:
+  stage: scan
   rules:
     - if: "$BUILD && $SUITE && $VERSION"
       when: always
@@ -154,6 +159,7 @@ scan:slim:
     - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}:${VERSION}"
 
 scan:all:full:
+  stage: scan
   extends: .scan.container.trivy.remote
   rules:
     - if: "$SCAN"
@@ -173,6 +179,7 @@ scan:all:full:
     - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}:$(cat version.txt)"
 
 scan:all:slim:
+  stage: scan
   extends: .scan.container.trivy.remote
   rules:
     - if: "$SCAN"
