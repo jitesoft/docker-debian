@@ -35,7 +35,7 @@ check-version:
   script:
     - apk add --no-cache wget grep curl
     - VERSION=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/rootfs.debian_version)
-    - CODENAME=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/Release | grep -oP "(?<=Codename:\ )(.*)" | awk '{print $1}')
+    - CODENAME=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/Release | grep -oP "(?<=Codename:\ )(.*)(?=[\/]|\n)" | awk '{print $1}')
     - |
       if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version.txt)" != "${VERSION}" ]; then
         echo "Should build new container for ${SUITE} version ${VERSION}"
@@ -80,7 +80,7 @@ download:
     - rm rootfs.tar.xz.sha256
     - mkdir tmp
     - tar -xJhf rootfs.tar.xz -C tmp/
-    - $(cd tmp && tar -czf ${CI_PROJECT_DIR}/artifacts/slim/rootfs-${DOCKER_ARCH}-slim.tar.gz *)
+    - $(cd tmp && tar -czf ${CI_PROJECT_DIR}/artifacts/rootfs-${DOCKER_ARCH}-slim.tar.gz *)
   artifacts:
     expire_in: 1 hour
     paths:
