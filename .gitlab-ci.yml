@@ -8,7 +8,6 @@ stages:
   - scan
 
 variables:
-  ARCHITECTURES: "amd64 arm32v7 arm64v8 i386 ppc64le s390x"
   REGISTRY_IMAGES: "${CI_REGISTRY_IMAGE},jitesoft/debian,ghcr.io/jitesoft/debian"
 
 check-version:
@@ -40,7 +39,7 @@ check-version:
     - |
       if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version.txt)" != "${VERSION}" ]; then
         echo "Should build new container for ${SUITE} version ${VERSION}"
-        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[CODENAME]=${CODENAME}" "variables[SUITE]=${SUITE}" "variables[VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
+        curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[CODENAME]=${CODENAME}" -F "variables[SUITE]=${SUITE}" -F "variables[VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
       fi
 
 download:
