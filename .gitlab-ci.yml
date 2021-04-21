@@ -36,7 +36,7 @@ check-version:
     - apk add --no-cache wget grep curl
     - VERSION=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/rootfs.debian_version)
     - CODENAME=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/Release | grep -oP "(?<=Codename:\ )(.*)(?![\/]|\n)" | awk '{print $1}')
-    - VERSION=$((echo $VERSION | grep -q '/') && (echo $VERSION | cut -f2 -d"/") || echo "${VERSION}")
+    - VERSION=$(echo $VERSION | grep -q '/' && (echo $VERSION | cut -f2 -d"/") || echo "${VERSION}")
     - |
       if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version.txt)" != "${VERSION}" ]; then
         echo "Should build new container for ${SUITE} version ${VERSION} with codename ${CODENAME}"
