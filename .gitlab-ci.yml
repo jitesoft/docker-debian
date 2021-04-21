@@ -14,7 +14,7 @@ check-version:
   parallel:
     matrix:
       - { SUITE: "stable", GIT_STRATEGY: none }
-      - { SUITE: "oldstable", GIT_STRATEGY: none }
+#      - { SUITE: "oldstable", GIT_STRATEGY: none }
       - { SUITE: "testing", GIT_STRATEGY: none }
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $CHECK'
@@ -94,8 +94,9 @@ build:full:
     - when: never
   variables:
     ARCH_LIST: "linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,linux/386"
-  dependencies:
-    - download
+  needs:
+    - job: download
+      artifacts: true
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   tags: [ jitesoft, buildx, protected ]
   script:
@@ -121,8 +122,9 @@ build:slim:
     - when: never
   variables:
     ARCH_LIST: "linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,linux/386"
-  dependencies:
-    - download
+  needs:
+    - job: download
+      artifacts: true
   image: registry.gitlab.com/jitesoft/dockerfiles/misc:latest
   tags: [ jitesoft, buildx, protected ]
   script:
