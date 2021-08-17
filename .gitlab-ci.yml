@@ -14,8 +14,8 @@ check-version:
   parallel:
     matrix:
       - { SUITE: "stable", GIT_STRATEGY: none }
-#      - { SUITE: "oldstable", GIT_STRATEGY: none }
-      - { SUITE: "testing", GIT_STRATEGY: none }
+      - { SUITE: "oldstable", GIT_STRATEGY: none }
+      #- { SUITE: "testing", GIT_STRATEGY: none }
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $CHECK'
       when: always
@@ -37,7 +37,7 @@ check-version:
     - VERSION=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/rootfs.debian_version)
     - CODENAME=$(wget -qO- ${URI}/amd64/lastSuccessfulBuild/artifact/${SUITE}/Release | grep -oP "(?<=Codename:\ )(.*)(?![\/]|\n)" | awk '{print $1}')
     - VERSION=$(echo $VERSION | grep -q '/' && (echo $VERSION | cut -f2 -d"/") || echo "${VERSION}")
-    - |
+    - | # TODO: Version check won't work for sid for now.
       if [ ! -z "${FORCE_BUILD+x}" ] || [ "$(cat version.txt)" != "${VERSION}" ]; then
         echo "Should build new container for ${SUITE} version ${VERSION} with codename ${CODENAME}"
         curl -F token=${CI_JOB_TOKEN} -F ref=master -F "variables[CODENAME]=${CODENAME}" -F "variables[SUITE]=${SUITE}" -F "variables[VERSION]=${VERSION}" -F "variables[BUILD]=true" https://gitlab.com/api/v4/projects/${CI_PROJECT_ID}/trigger/pipeline
