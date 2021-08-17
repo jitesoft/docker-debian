@@ -25,35 +25,31 @@ codename if applicable. Check the tag list for latest version.
 ### Docker Hub
 
 * `jitesoft/debian`
-    * `latest`, `stable`, `10`, `buster`
-    * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
-    * `9`, `stretch`
-    * `9-slim`, `stretch-slim`
+    * `latest`, `stable`, `11`, `bullseye`
+    * `latest-slim`, `stable-slim`, `11-slim`, `bullseye-slim`
+    * `10`, `buster`
+    * `10-slim`, `buster-slim`
 
 ### GitHub
 
 * `ghcr.io/jitesoft/debian`
-    * `latest`, `stable`, `10`, `buster`
-    * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
-
+    * `latest`, `stable`, `11`, `bullseye`
+    * `latest-slim`, `stable-slim`, `11-slim`, `bullseye-slim`
+    * `oldstable`, `10`, `buster`
+    * `oldstable-slim`, `10-slim`, `buster-slim`
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/debian`
-    * `latest`, `stable`, `10`, `buster`
-    * `9`, `stretch`
-* `registry.gitlab.com/jitesoft/dockerfiles/debian/slim` ‡
-    * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
-    * `9-slim`, `stretch-slim`
-  
+    * `latest`, `stable`, `11`, `bullseye`
+    * `oldstable`, `10`, `buster`
+* `registry.gitlab.com/jitesoft/dockerfiles/debian/slim`
+    * `latest-slim`, `stable-slim`, `11-slim`, `bullseye-slim`
+    * `oldstable-slim`, `10-slim`, `buster-slim`
+
 ### Quay.io †
 
 * `quay.io/jitesoft/debian`
-    * `latest`, `stable`, `10`, `buster`
-    * `9`, `stretch`
-    * `latest-slim`, `stable-slim`, `10-slim`, `buster-slim`
-    * `9-slim`, `stretch-slim`
-  
-_‡ Moved from <name>-slim to its own namespace at 2021-04-10._  
+
 _† Quay images are currently paused due to multi-arch issues with quay._
 
 Dockerfiles can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/debian/) and [GitHub](https://github.com/jitesoft/docker-debian).
@@ -79,9 +75,6 @@ If you wish to sponsor our projects, reach out to the email above or visit any o
 
 Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
 
-<a href="https://www.linaro.org/">
-  <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/linaro.png" width="256" alt="Linaro logo" />
-</a>
 <a href="https://fosshost.org/">
   <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshost.png" width="256" alt="Fosshost logo" />
 </a>
