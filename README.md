@@ -37,6 +37,7 @@ codename if applicable. Check the tag list for latest version.
     * `latest-slim`, `stable-slim`, `11-slim`, `bullseye-slim`
     * `oldstable`, `10`, `buster`
     * `oldstable-slim`, `10-slim`, `buster-slim`
+
 ### GitLab
 
 * `registry.gitlab.com/jitesoft/dockerfiles/debian`
