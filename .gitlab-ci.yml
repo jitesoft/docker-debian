@@ -1,10 +1,14 @@
 include:
-  - https://gitlab.com/jitesoft/gitlab-ci-lib/raw/master/Scan/trivy.yml
+  - file: /Scan/trivy.yml
+    project: jitesoft/gitlab-ci-lib
+  - file: /OCI/sign.yml
+    project: jitesoft/gitlab-ci-lib
 
 stages:
   - check
   - download
   - build
+  - sign
   - scan
 
 variables:
@@ -91,7 +95,7 @@ build:full:
   stage: build
   rules:
     - if: "$BUILD && $SUITE && $VERSION"
-      when: always
+      when: on_success
     - when: never
   variables:
     ARCH_LIST: "linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,linux/386"
@@ -119,7 +123,7 @@ build:slim:
   stage: build
   rules:
     - if: "$BUILD && $SUITE && $VERSION"
-      when: always
+      when: on_success
     - when: never
   variables:
     ARCH_LIST: "linux/amd64,linux/arm/v7,linux/arm64,linux/ppc64le,linux/s390x,linux/386"
@@ -147,7 +151,7 @@ scan:full:
   stage: scan
   rules:
     - if: "$BUILD && $SUITE && $VERSION"
-      when: always
+      when: on_success
     - when: never
   extends: .scan.container.trivy.remote
   before_script:
@@ -157,7 +161,7 @@ scan:slim:
   stage: scan
   rules:
     - if: "$BUILD && $SUITE && $VERSION"
-      when: always
+      when: on_success
     - when: never
   extends: .scan.container.trivy.remote
   before_script:
@@ -202,3 +206,16 @@ scan:all:slim:
     policy: pull
   before_script:
     - export SCANNING_IMAGE_NAME="${CI_REGISTRY_IMAGE}/slim:$(cat version.txt)"
+
+sign:
+  extends: .sign
+  tags: [ jitesoft, protected, buildx ]
+  stage: sign
+  variables:
+    COSIGN_ANNOTATIONS: "-a sig=jitesoft-bot"
+    SIGN_TAGS: "${VERSION},${CODENAME},${SUITE}"
+    SIGN_IMAGES: "${REGISTRY_IMAGES}"
+  rules:
+    - if: "$BUILD"
+      when: on_success
+    - when: never
