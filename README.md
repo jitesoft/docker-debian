@@ -22,34 +22,15 @@ The images are built for `amd64`, `386`, `arm64`, `armv7`, `x390s` and `ppc64le`
 Tags are named after their suite (stable, oldstable, test), their exact version and their
 codename if applicable. Check the tag list for latest version.
 
-### Docker Hub
+### Registries
+
+The `jitesoft/debian` images can be found at the following registries:
 
 * `jitesoft/debian`
-    * `latest`, `stable`, `11`, `bullseye`
-    * `latest-slim`, `stable-slim`, `11-slim`, `bullseye-slim`
-    * `10`, `buster`
-    * `10-slim`, `buster-slim`
-
-### GitHub
-
 * `ghcr.io/jitesoft/debian`
-    * `latest`, `stable`, `11`, `bullseye`
-    * `latest-slim`, `stable-slim`, `11-slim`, `bullseye-slim`
-    * `oldstable`, `10`, `buster`
-    * `oldstable-slim`, `10-slim`, `buster-slim`
-
-### GitLab
-
 * `registry.gitlab.com/jitesoft/dockerfiles/debian`
-    * `latest`, `stable`, `11`, `bullseye`
-    * `oldstable`, `10`, `buster`
 * `registry.gitlab.com/jitesoft/dockerfiles/debian/slim`
-    * `latest-slim`, `stable-slim`, `11-slim`, `bullseye-slim`
-    * `oldstable-slim`, `10-slim`, `buster-slim`
-
-### Quay.io †
-
-* `quay.io/jitesoft/debian`
+* `quay.io/jitesoft/debian` †
 
 _† Quay images are currently paused due to multi-arch issues with quay._
 
@@ -59,25 +40,34 @@ Dockerfiles can be found at [GitLab](https://gitlab.com/jitesoft/dockerfiles/deb
 
 This image follows the [Jitesoft image label specification 1.0.0](https://gitlab.com/snippets/1866155).
 
+### Signature
+
+Cosign public key for this image can be found at [https://jitesoft.com/cosign.pub](https://jitesoft.com/cosign.pub).
+
 ## Licenses
 
 Files in this repository are released under the MIT license.  
 Read the full Debian license [here](https://www.debian.org/legal/licenses/).  
 
-## Sponsors
+### Sponsors
 
-Sponsoring is vital for the further development and maintaining of open source projects.  
-Questions and sponsoring queries can be made via <a href="mailto:sponsor@jitesoft.com">email</a>.  
+Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
+
+<a href="https://fosshost.org/">
+  <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshost.png" height="128" alt="Fosshost logo" />
+</a>
+<a href="https://www.aarch64.com/">
+  <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/aarch64.png" height="128" alt="Aarch64 logo" />
+</a>
+
+_The companies above are not affiliated with Jitesoft or any Jitesoft Projects directly._
+
+---
+
+Sponsoring is vital for the further development and maintaining of open source.  
+Questions and sponsoring queries can be made by <a href="mailto:sponsor@jitesoft.com">email</a>.  
 If you wish to sponsor our projects, reach out to the email above or visit any of the following sites:
 
 [Open Collective](https://opencollective.com/jitesoft-open-source)  
 [GitHub Sponsors](https://github.com/sponsors/jitesoft)  
 [Patreon](https://www.patreon.com/jitesoft)
-
-Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
-
-<a href="https://fosshost.org/">
-  <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshost.png" width="256" alt="Fosshost logo" />
-</a>
-
-_The companies above are not affiliated with Jitesoft or any Jitesoft Projects directly._
