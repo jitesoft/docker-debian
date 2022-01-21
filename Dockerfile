@@ -24,7 +24,8 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       org.opencontainers.image.source="https://gitlab.com/jitesoft/dockerfiles/debian" \
       # Artifact hub annotations
       io.artifacthub.package.alternative-locations="oci://index.docker.io/jitesoft/debian,oci://ghcr.io/jitesoft/debian" \
-      io.artifacthub.package.readme-url="https://gitlab.com/jitesoft/dockerfiles/debian/-/raw/master/README.md"
+      io.artifacthub.package.readme-url="https://gitlab.com/jitesoft/dockerfiles/debian/-/raw/master/README.md" \
+      io.artifacthub.package.logo-url="https://jitesoft.com/favicon-96x96.png"
 
 ARG TARGETARCH
 ARG TYPE
