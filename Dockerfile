@@ -3,6 +3,8 @@ ARG VERSION
 ARG TYPE
 ARG SUITE
 ARG CODENAME
+ARG BUILD_TIME
+
 LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       maintainer.org="Jitesoft" \
       maintainer.org.uri="https://jitesoft.com" \
@@ -14,6 +16,15 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.app.debian.version.name="${CODENAME}" \
       com.jitesoft.app.debian.type="${TYPE}" \
       com.jitesoft.app.debian.suite="${SUITE}"
+      # Open container labels
+      org.opencontainers.image.version="${VERSION}" \
+      org.opencontainers.image.created="${BUILD_TIME}" \
+      org.opencontainers.image.description="Debian linux" \
+      org.opencontainers.image.vendor="Jitesoft" \
+      org.opencontainers.image.source="https://gitlab.com/jitesoft/dockerfiles/debian" \
+      # Artifact hub annotations
+      io.artifacthub.package.alternative-locations="oci://index.docker.io/jitesoft/debian,oci://ghcr.io/jitesoft/debian" \
+      io.artifacthub.package.readme-url="https://gitlab.com/jitesoft/dockerfiles/debian/-/raw/master/README.md"
 
 ARG TARGETARCH
 ARG TYPE

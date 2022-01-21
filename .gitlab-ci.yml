@@ -111,7 +111,7 @@ build:full:
         TEMP_LIST=$(helper taglist "${REGISTRY_IMAGES}" "latest")
         TAGS="${TAGS} ${TEMP_LIST}"
       fi
-    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAGS} --build-arg TYPE=full --build-arg VERSION=${VERSION} --build-arg SUITE=${SUITE} --build-arg CODENAME=${CODENAME} .
+    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAGS} --build-arg TYPE=full --build-arg VERSION=${VERSION} --build-arg BUILD_TIME=$(date -Iseconds) --build-arg SUITE=${SUITE} --build-arg CODENAME=${CODENAME} .
     - echo -e "${VERSION}" > version.txt
   cache:
     paths:
@@ -139,7 +139,7 @@ build:slim:
         TEMP_LIST=$(helper taglist "${REGISTRY_IMAGES}" "latest")
         TAGS="${TAGS} ${TEMP_LIST}"
       fi
-    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAGS} --build-arg TYPE=slim --build-arg VERSION=${VERSION} --build-arg SUITE=${SUITE} --build-arg CODENAME=${CODENAME} .
+    - docker buildx build --platform ${ARCH_LIST} --progress plain --push ${TAGS} --build-arg TYPE=slim --build-arg VERSION=${VERSION} --build-arg SUITE=${SUITE} --build-arg BUILD_TIME=$(date -Iseconds) --build-arg CODENAME=${CODENAME} .
     - echo -e "${VERSION}" > version.txt
   cache:
     paths:
