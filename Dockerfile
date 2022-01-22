@@ -15,7 +15,7 @@ LABEL maintainer="Johannes Tegnér <johannes@jitesoft.com>" \
       com.jitesoft.app.debian.version="${VERSION}" \
       com.jitesoft.app.debian.version.name="${CODENAME}" \
       com.jitesoft.app.debian.type="${TYPE}" \
-      com.jitesoft.app.debian.suite="${SUITE}"
+      com.jitesoft.app.debian.suite="${SUITE}" \
       # Open container labels
       org.opencontainers.image.version="${VERSION}" \
       org.opencontainers.image.created="${BUILD_TIME}" \
