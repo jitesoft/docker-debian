@@ -53,12 +53,8 @@ Read the full Debian license [here](https://www.debian.org/legal/licenses/).
 
 Jitesoft images are built via GitLab CI on runners hosted by the following wonderful organisations:
 
-<a href="https://fosshost.org/">
-  <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshost.png" height="128" alt="Fosshost logo" />
-</a>
-<a href="https://www.aarch64.com/">
-  <img src="https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/aarch64.png" height="128" alt="Aarch64 logo" />
-</a>
+[![Fosshost Logo](https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/fosshostx128.png)](https://fosshost.org)
+[![Aarch64 logo](https://raw.githubusercontent.com/jitesoft/misc/master/sponsors/aarch64x128.png)](https://aarch64.com)
 
 _The companies above are not affiliated with Jitesoft or any Jitesoft Projects directly._
 
